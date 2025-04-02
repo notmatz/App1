@@ -141,3 +141,67 @@ char* metrica_hp(int *size, struct order *orders) {     // Resumen para mostrar 
     }
     return buffer;
 }
+// --- Arreglo de funciones y nombres ---
+typedef char* (*MetricaFunc)(int *, struct order *);
+
+const char *nombres_metricas[] = {
+    "apo", "apd", "pms", "pls",
+    "dms", "dls", "dmsp", "dlsp",
+    "ims", "hp"
+};
+
+MetricaFunc funciones_metricas[] = {
+    metrica_apo, metrica_apd, metrica_pms, metrica_pls,
+    metrica_dms, metrica_dls, metrica_dmsp, metrica_dlsp,
+    metrica_ims, metrica_hp
+};
+
+int num_metricas = sizeof(nombres_metricas) / sizeof(nombres_metricas[0]);
+
+// --- FunciÃ³n para cargar los datos del archivo CSV ---
+void cargar_datos(const char *archivo) {
+    FILE *fp = fopen(archivo, "r");
+    if (!fp) {
+        perror("Error al abrir el archivo");
+        exit(1);
+    }
+
+    char linea[1024];
+    int order_counts[MAX_ORDERS] = {0};
+    char orders_list[MAX_ORDERS][20];
+
+    fgets(linea, sizeof(linea), fp); // saltar encabezado
+    while (fgets(linea, sizeof(linea), fp)) {
+        char *temp;
+        int order_id, quantity;
+        double total_price;
+        char order_date[20], pizza_name[50], pizza_category[50], pizza_ingredients[200];
+        char pizza_size[10];
+
+        temp = strtok(linea, ","); temp = strtok(NULL, ","); order_id = atoi(temp);
+        temp = strtok(NULL, ","); temp = strtok(NULL, ","); quantity = atoi(temp);
+        temp = strtok(NULL, ","); strcpy(order_date, temp);
+        temp = strtok(NULL, ","); // order_time (ignorado)
+        temp = strtok(NULL, ","); // unit_price (ignorado)
+        temp = strtok(NULL, ","); if (temp) total_price = atof(temp); // total_price correcto        
+        total_price = atof(temp);
+        temp = strtok(NULL, ","); if (temp) strcpy(pizza_size, temp);           // pizza_size correcto
+        temp = strtok(NULL, ","); if (temp) strcpy(pizza_category, temp);      // pizza_category correcto
+        temp = strtok(NULL, "\""); if (temp) strcpy(pizza_ingredients, temp);  // pizza_ingredients correcto        
+        temp = strtok(NULL, ",");
+        if (temp) {
+            if (temp[0] == '"') memmove(temp, temp + 1, strlen(temp));
+            temp[strlen(temp) - 1] = '\0';
+            strcpy(pizza_name, temp);
+        } else strcpy(pizza_name, "Unknown Pizza");
+
+        order_counts[order_id] += quantity;
+        total_pizzas += quantity;
+        total_revenue += total_price;
+
+        char order_id_str[20]; sprintf(order_id_str, "%d", order_id);
+        int found = 0;
+        for (int i = 0; i < orders_total; i++) {
+            if (strcmp(orders_list[i], order_id_str) == 0) { found = 1; break; }
+        }
+        if (!found) { strcpy(orders_list[orders_total++], order_id_str); }
