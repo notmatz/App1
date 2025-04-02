@@ -1,8 +1,0 @@
-pizza_id,order_id,pizza_name_id,quantity,order_date,order_time,unit_price,total_price,pizza_size,pizza_category,pizza_ingredients,pizza_name
-1.00,1.00,hawaiian_m,5.00,1/1/2015,11:38:36,13.25,13.25,M,Classic,"Sliced Ham, Pineapple, Mozzarella Cheese","The Hawaiian Pizza"
-2.00,2.00,classic_dlx_m,8.00,1/1/2015,11:57:40,16.00,16.00,M,Classic,"Pepperoni, Mushrooms, Red Onions, Red Peppers, Bacon","The Classic Deluxe Pizza"
-3.00,2.00,five_cheese_l,7.00,1/1/2015,11:57:40,18.50,18.50,L,Veggie,"Mozzarella Cheese, Provolone Cheese, Smoked Gouda Cheese, Romano Cheese, Blue Cheese, Garlic","The Five Cheese Pizza"
-4.00,3.00,bbq_chicken_s,3.00,3/1/2015,12:15:22,12.75,12.75,S,Chicken,"Grilled Chicken, BBQ Sauce, Red Onions, Cilantro, Mozzarella Cheese","The BBQ Chicken Pizza"
-5.00,4.00,veggie_supreme_l,6.00,4/1/2015,13:05:10,17.25,17.25,L,Veggie,"Mushrooms, Green Peppers, Red Onions, Black Olives, Spinach, Mozzarella Cheese","The Veggie Supreme Pizza"
-6.00,5.00,meat_lovers_xl,10.00,5/1/2015,14:30:45,20.00,20.00,XL,Meat,"Pepperoni, Sausage, Bacon, Ham, Beef, Mozzarella Cheese","The Meat Lovers Pizza"
-7.00,5.00,margherita_m,4.00,6/1/2015,15:45:33,14.50,14.50,M,Classic,"Tomato Slices, Fresh Basil, Mozzarella Cheese, Olive Oil","The Margherita Pizza"
