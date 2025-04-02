@@ -1,2 +1,80 @@
+    //app1
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+    //Límites Maximos
+#define MAX_LEN 100
+#define MAX_ORDERS 1000
+#define MAX_PIZZAS 1000
+#define MAX_INGREDIENTS 100
+#define MAX_CATEGORIES 20
 
-jdkjaksd
+    //Estructuras de la app
+
+typedef struct {    //Esta representa los datos agregados por día de venta, incluyendo fecha de la  venta, total de dinero recaudado por día y total de pizzas vendidas en esa fecha
+    char date[20];    
+    double total_sales;
+    int total_pizzas;  
+} SalesData;
+
+typedef struct {    //Esta representa el total de ventas de cada tipo de pizza, incluyendo su nombre y la cantidad total vendida
+    char pizza_name[50];
+    int total_sold;
+} PizzaData;
+
+typedef struct {    //Esta representa el total de veces que se ha utilizado cada ingrediente, incluyendo el nombre del ingrediente y su frecuencia de uso en ventas
+    char ingredient_name[50];
+    int total_sold;
+} IngredientData;
+
+typedef struct {    //Esta representa las ventas acumuladas por categoría de pizza, incluyendo el nombre de la categoría y la cantidad total vendida en esa categoría
+    char category_name[50];
+    int total_sold;
+} CategoryData;
+
+typedef struct order { int dummy; } order;  //No se usa funcionalmente, es solo para cumplir con la firma de funciones requerida
+
+  //Datos globales 
+  //Son datos utilizados para almacenar los totales acumulados y la información consolidada de ventas, pizzas, ingredientes y categorías, necesarios para el análisis y cálculo de métricas
+int total_fechas = 0, total_pizzas = 0, orders_total = 0;
+double total_revenue = 0;
+int total_pizza_types = 0, total_ingredients = 0, total_categories = 0;
+
+SalesData sales[MAX_ORDERS];    //Este arreglo almacena información de ventas por fecha
+PizzaData pizzas[MAX_PIZZAS];   //Etse arreglo almacena datos acumulados por tipo de pizza
+IngredientData ingredients[MAX_INGREDIENTS];  //Este rreglo almacena la frecuencia de uso de cada ingrediente
+CategoryData categories[MAX_CATEGORIES];  //Este arreglo almacena los datos acumulados por categoría de pizza
+
+//Funciones de métricas
+
+char* metrica_apo(int *size, struct order *orders) {    //Esta calcula el promedio de pizzas vendidas por orden, dividiendo el total de pizzas por la cantidad de órdenes
+    static char buffer[128];
+    snprintf(buffer, sizeof(buffer), "Promedio de pizzas por orden: %.2f", (double)total_pizzas / orders_total);
+    return buffer;
+}
+
+char* metrica_apd(int *size, struct order *orders) {    //Esta calcula el promedio de pizzas vendidas por día, dividiendo el total de pizzas por la cantidad de fechas registradas
+    static char buffer[128];
+    snprintf(buffer, sizeof(buffer), "Promedio de pizzas por día: %.2f", (double)total_pizzas / total_fechas);
+    return buffer;
+}
+
+char* metrica_pms(int *size, struct order *orders) {    //Esta identifica la pizza más vendida del total registrado, recorriendo el arreglo y comparando las cantidades
+    static char buffer[128];
+    PizzaData best = pizzas[0];
+    for (int i = 1; i < total_pizza_types; i++) {
+        if (pizzas[i].total_sold > best.total_sold) best = pizzas[i];
+    }
+    snprintf(buffer, sizeof(buffer), "Pizza más vendida: %s - %d unidades", best.pizza_name, best.total_sold);
+    return buffer;
+}
+
+char* metrica_pls(int *size, struct order *orders) {    //Esta identifica la pizza menos vendida del total registrado, recorriendo el arreglo y comparando las cantidades
+    static char buffer[128];
+    PizzaData worst = pizzas[0];
+    for (int i = 1; i < total_pizza_types; i++) {
+        if (pizzas[i].total_sold < worst.total_sold) worst = pizzas[i];
+    }
+    snprintf(buffer, sizeof(buffer), "Pizza menos vendida: %s - %d unidades", worst.pizza_name, worst.total_sold);
+    return buffer;
+}
