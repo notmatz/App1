@@ -205,3 +205,92 @@ void cargar_datos(const char *archivo) {
             if (strcmp(orders_list[i], order_id_str) == 0) { found = 1; break; }
         }
         if (!found) { strcpy(orders_list[orders_total++], order_id_str); }
+    
+        found = 0;
+        for (int i = 0; i < total_fechas; i++) {
+            if (strcmp(sales[i].date, order_date) == 0) {
+                sales[i].total_sales += total_price;
+                sales[i].total_pizzas += quantity;
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            strcpy(sales[total_fechas].date, order_date);
+            sales[total_fechas].total_sales = total_price;
+            sales[total_fechas++].total_pizzas = quantity;
+        }
+
+        found = 0;
+        for (int i = 0; i < total_pizza_types; i++) {
+            if (strcmp(pizzas[i].pizza_name, pizza_name) == 0) {
+                pizzas[i].total_sold += quantity; found = 1; break;
+            }
+        }
+        if (!found) {
+            strcpy(pizzas[total_pizza_types].pizza_name, pizza_name);
+            pizzas[total_pizza_types++].total_sold = quantity;
+        }
+
+        found = 0;
+        for (int i = 0; i < total_categories; i++) {
+            if (strcmp(categories[i].category_name, pizza_category) == 0) {
+                categories[i].total_sold += quantity; found = 1; break;
+            }
+        }
+        if (!found) {
+            strcpy(categories[total_categories].category_name, pizza_category);
+            categories[total_categories++].total_sold = quantity;
+        }
+
+        if (pizza_ingredients[0] == '"') {
+            memmove(pizza_ingredients, pizza_ingredients + 1, strlen(pizza_ingredients));
+            pizza_ingredients[strlen(pizza_ingredients) - 1] = '\0';
+        }
+        for (int i = 0; pizza_ingredients[i]; i++) {
+            if (pizza_ingredients[i] == ',') pizza_ingredients[i] = ';';
+        }
+
+        char *ingredient = strtok(pizza_ingredients, ";");
+        while (ingredient) {
+            while (*ingredient == ' ') ingredient++;
+            char *end = ingredient + strlen(ingredient) - 1;
+            while (end > ingredient && (*end == ' ' || *end == '"')) *end-- = '\0';
+
+            found = 0;
+            for (int i = 0; i < total_ingredients; i++) {
+                if (strcmp(ingredients[i].ingredient_name, ingredient) == 0) {
+                    ingredients[i].total_sold += quantity; found = 1; break;
+                }
+            }
+            if (!found && total_ingredients < MAX_INGREDIENTS) {
+                strcpy(ingredients[total_ingredients].ingredient_name, ingredient);
+                ingredients[total_ingredients++].total_sold = quantity;
+            }
+            ingredient = strtok(NULL, ";");
+        }
+    }
+    fclose(fp);
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        printf("Uso: %s <archivo_csv> <metrica1> [<metrica2> ...]\n", argv[0]);
+        return 1;
+    }
+
+    cargar_datos(argv[1]);
+    int dummy = 0;
+    struct order *ordenes = NULL;
+
+    for (int i = 2; i < argc; i++) {
+        for (int j = 0; j < num_metricas; j++) {
+            if (strcmp(argv[i], nombres_metricas[j]) == 0) {
+                printf("\n--- %s ---\n%s\n", argv[i], funciones_metricas[j](&dummy, ordenes));
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
