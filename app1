@@ -78,3 +78,66 @@ char* metrica_pls(int *size, struct order *orders) {    //Esta identifica la piz
     snprintf(buffer, sizeof(buffer), "Pizza menos vendida: %s - %d unidades", worst.pizza_name, worst.total_sold);
     return buffer;
 }
+
+
+char* metrica_dms(int *size, struct order *orders) {    // Identificar dia con mas dinero se gano dentro de sales
+    static char buffer[128];
+    SalesData best = sales[0];
+    for (int i = 1; i < total_fechas; i++) {
+        if (sales[i].total_sales > best.total_sales) best = sales[i];
+    }
+    snprintf(buffer, sizeof(buffer), "Fecha con más ventas en dinero: %s - %.2f", best.date, best.total_sales);
+    return buffer;
+}
+
+char* metrica_dls(int *size, struct order *orders) {    // Identificar el dia con menos dinero se gano dentro de sales
+    static char buffer[128];
+    SalesData worst = sales[0];
+    for (int i = 1; i < total_fechas; i++) {
+        if (sales[i].total_sales < worst.total_sales) worst = sales[i];
+    }
+    snprintf(buffer, sizeof(buffer), "Fecha con menos ventas en dinero: %s - %.2f", worst.date, worst.total_sales);
+    return buffer;
+}
+
+char* metrica_dmsp(int *size, struct order *orders) {   // Identificar el dia que mas pizzas se vendieron 
+    static char buffer[128];
+    SalesData best = sales[0];
+    for (int i = 1; i < total_fechas; i++) {
+        if (sales[i].total_pizzas > best.total_pizzas) best = sales[i];
+    }
+    snprintf(buffer, sizeof(buffer), "Fecha con más ventas en cantidad de pizzas: %s - %d", best.date, best.total_pizzas);
+    return buffer;
+}
+
+char* metrica_dlsp(int *size, struct order *orders) {   // Identificar el dia que menos pizzas se vendieron
+    static char buffer[128];
+    SalesData worst = sales[0];
+    for (int i = 1; i < total_fechas; i++) {
+        if (sales[i].total_pizzas < worst.total_pizzas) worst = sales[i];
+    }
+    snprintf(buffer, sizeof(buffer), "Fecha con menos ventas en cantidad de pizzas: %s - %d", worst.date, worst.total_pizzas);
+    return buffer;
+}
+
+char* metrica_ims(int *size, struct order *orders) {    // Identificar cual fue el ingrediente mas vendido
+    static char buffer[128];
+    IngredientData best = ingredients[0];
+    for (int i = 1; i < total_ingredients; i++) {
+        if (ingredients[i].total_sold > best.total_sold) best = ingredients[i];
+    }
+    snprintf(buffer, sizeof(buffer), "Ingrediente más vendido: %s - %d unidades", best.ingredient_name, best.total_sold);
+    return buffer;
+}
+
+char* metrica_hp(int *size, struct order *orders) {     // Resumen para mostrar la cantidad de pizzas vendidas por categoria
+    static char buffer[1024];
+    buffer[0] = '\0';
+    strcat(buffer, "Cantidad de pizzas por categoría:\n");
+    for (int i = 0; i < total_categories; i++) {
+        char linea[100];
+        snprintf(linea, sizeof(linea), "- %s: %d unidades\n", categories[i].category_name, categories[i].total_sold);
+        strcat(buffer, linea);
+    }
+    return buffer;
+}
