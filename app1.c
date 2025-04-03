@@ -1,4 +1,4 @@
-    //app1
+ //app1
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,7 +9,7 @@
 #define MAX_INGREDIENTS 100
 #define MAX_CATEGORIES 20
 
-    //Estructuras de la app
+//Estructuras de la app
 
 typedef struct {    //Esta representa los datos agregados por día de venta, incluyendo fecha de la  venta, total de dinero recaudado por día y total de pizzas vendidas en esa fecha
     char date[20];    
@@ -34,7 +34,7 @@ typedef struct {    //Esta representa las ventas acumuladas por categoría de pi
 
 typedef struct order { int dummy; } order;  //No se usa funcionalmente, es solo para cumplir con la firma de funciones requerida
 
-  //Datos globales 
+//Datos globales 
   //Son datos utilizados para almacenar los totales acumulados y la información consolidada de ventas, pizzas, ingredientes y categorías, necesarios para el análisis y cálculo de métricas
 int total_fechas = 0, total_pizzas = 0, orders_total = 0;
 double total_revenue = 0;
